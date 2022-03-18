@@ -112,7 +112,8 @@ def create_new_session(client_name_dict):
     cur = conn.cursor()
     cur.execute("DROP TABLE " + TABLE_NAME)
     if not name_dict:
-        name_dict = DEFAULT_NAME_DICT
+        for id, name in zip(ID_LIST, NAME_LIST):
+            name_dict[1].add(people(id, name, 1))
     save_dict_to_db()
 
 
@@ -177,11 +178,11 @@ def submit_session():
 @app.route('/update_people', methods=['POST'])
 def update_people():
     people = json.loads(request.get_data(as_text=True))
-    for weight in name_dict_session:
-        name_dict_session[weight].discard(people.name)
-    if people.weight not in name_dict_session:
-        name_dict_session[people.weight] = set()
-    name_dict_session[people.weight].add(people.name)
+    for weight in name_dict:
+        name_dict[weight].discard(people.name)
+    if people.weight not in name_dict:
+        name_dict[people.weight] = set()
+    name_dict[people.weight].add(people.name)
     return "update people success"
 
 
