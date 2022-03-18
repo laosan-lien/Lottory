@@ -162,7 +162,7 @@ def start_session():
     if 0 in name_dict_session and name_dict_session[0]:
         return {"last_winners": convert_people_to_list_json(name_dict_session[0])}
     else:
-        return {"last_winners": [""]}
+        return {"last_winners": []}
 
 # 提交本次抽奖会话，将当前会话写入db
 
@@ -183,6 +183,7 @@ def update_people():
     if people.weight not in name_dict:
         name_dict[people.weight] = set()
     name_dict[people.weight].add(people.name)
+    save_dict_to_db()
     return "update people success"
 
 
