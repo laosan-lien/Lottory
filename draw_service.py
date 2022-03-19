@@ -131,7 +131,7 @@ def convert_people_to_list_json_with_prob(people_prob):
     for p in zip(people_prob[0], people_prob[1]):
         json_dict = {"workNum": p[0].id, "name": p[0].name, "winProp": p[1]}
         people_list.append(json_dict)
-    return{"people": people_list}
+    return people_list
 
 
 def recover_session_from_db():
@@ -151,7 +151,7 @@ def recover_session_from_db():
 @app.route('/get_prob')
 def get_prob():
     people_prob_tuple = generate_prob(copy_name_dict(name_dict))
-    return convert_people_to_list_json_with_prob(people_prob_tuple)
+    return {"status": "SUCCESS", "luckDogList": convert_people_to_list_json_with_prob(people_prob_tuple)}
 
 
 @app.route('/start_session/')
@@ -160,9 +160,9 @@ def start_session():
     global name_dict_session
     name_dict_session = copy_name_dict(name_dict)
     if 0 in name_dict_session and name_dict_session[0]:
-        return {"last_winners": convert_people_to_list_json(name_dict_session[0])}
+        return {"status": "SUCCESS", "luckDogList": convert_people_to_list_json(name_dict_session[0])}
     else:
-        return {"last_winners": []}
+        return {"status": "SUCCESS", "luckDogList": []}
 
 # 提交本次抽奖会话，将当前会话写入db
 
@@ -172,19 +172,19 @@ def submit_session():
     global name_dict
     name_dict = copy_name_dict(name_dict_session)
     save_dict_to_db()
-    return "save to db success"
+    return {"status": "SUCCESS", "luckDogList": []}
 
 
 @app.route('/update_people', methods=['POST'])
 def update_people():
-    people = json.loads(request.get_data(as_text=True))
+    p = json.loads(request.get_data(as_text=True))
     for weight in name_dict:
-        name_dict[weight].discard(people.name)
+        name_dict[weight].discard(people(p.workNum, p.name, 1))
     if people.weight not in name_dict:
         name_dict[people.weight] = set()
-    name_dict[people.weight].add(people.name)
+    name_dict[people.weight].add(people(p.workNum, p.name, 1))
     save_dict_to_db()
-    return "update people success"
+    return {"status": "SUCCESS", "luckDogList": []}
 
 
 @app.route('/get_draw_result')
@@ -208,7 +208,7 @@ def get_draw_result():
             name_dict_session[0].add(winner)
             name_dict_session[1].remove(winner)
         is_first_luckdraw = False
-        return {"award_winners": convert_people_to_list_json(name_dict_session[0])}
+        return {"status": "SUCCESS", "luckDogList": convert_people_to_list_json(name_dict_session[0])}
     else:
         # 权重调整
         # 所有人的权重加1
@@ -234,7 +234,7 @@ def get_draw_result():
                 break
             else:
                 name_dict_session.pop(weight + 1)
-        return {"award_winners": convert_people_to_list_json(name_dict_session[0])}
+        return {"status": "SUCCESS", "luckDogList": convert_people_to_list_json(name_dict_session[0])}
 
 
 if __name__ == '__main__':
