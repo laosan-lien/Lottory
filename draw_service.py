@@ -191,6 +191,7 @@ def get_draw_result():
     name_dict_session = copy.deepcopy(name_dict)
     award_winners = []
     name_dict_tmp = copy.deepcopy(name_dict_session)
+    print("is_first_luckdraw = "+str(is_first_luckdraw))
     while len(award_winners) < 5:
         name_prob_tuple = generate_prob(name_dict_tmp)
         winner = random_pick(name_prob_tuple[0], name_prob_tuple[1])
@@ -221,9 +222,9 @@ if __name__ == '__main__':
         for id, name in zip(ID_LIST, NAME_LIST):
             name_dict[id].add(people(id, name, 1))
         save_dict_to_db()
-    is_first_luckdraw = False
+    is_first_luckdraw = True
     for id in name_dict.keys():
         if name_dict[id].weight == 0:
-            is_first_luckdraw = True
+            is_first_luckdraw = False
 
     app.run('0.0.0.0', '5000')
