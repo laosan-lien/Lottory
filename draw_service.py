@@ -11,7 +11,8 @@ TABLE_NAME = "name_dict"
 
 NAME_LIST = ["Lily", "John", "Lucy", "chris", "james", "young", "shirley", "crampton",
              "vincent", "fred", "andrea", "alex", "marie", "owen", "lewis", "bobby", "kent", "jeffery"]
-ID_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+ID_LIST = ["1", "2", "3", "4", "5", "6", "7", "8", "9",
+           "10", "11", "12", "13", "14", "15", "16", "17", "18"]
 
 INSERT_OR_REPLACE_SQL = "INSERT OR REPLACE INTO "+TABLE_NAME+" VALUES (?,?,?)"
 SELECT_SQL = "SELECT * FROM " + TABLE_NAME
@@ -72,7 +73,7 @@ def create_table():
     conn = connect_db()
     cur = conn.cursor()
     sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + \
-        "(ID INT PRIMARY KEY,NAME TEXT NOT NULL,WEIGHT INT NOT NULL)"
+        "(ID TEXT PRIMARY KEY,NAME TEXT NOT NULL,WEIGHT INT NOT NULL)"
     cur.execute(sql)
     conn.commit()
     conn.close()
