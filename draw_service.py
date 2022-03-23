@@ -124,7 +124,7 @@ def convert_people_to_list_json_with_prob(people_prob):
     people_list = []
     for p in zip(people_prob[0], people_prob[1]):
         json_dict = {"workNum": p[0].id,
-                     "name": p[0].name, "winProp": int(1000*(p[1]))}
+                     "name": p[0].name, "winProb": int(1000*(p[1]))}
         people_list.append(json_dict)
     return people_list
 
